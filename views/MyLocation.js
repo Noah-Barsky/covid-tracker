@@ -172,7 +172,7 @@ export default class MyLocation extends React.Component {
 						>
 							<Heatmap radius={40} points={this.state.points} />
 						</MapView>
-						<Text style={{ backgroundColor: "#ffff00", padding: 10, marginTop: 440, marginLeft: 20, marginRight: 20, marginBottom: 20, fontSize: 20 }}>{this.state.status}</Text>
+						<Text style={{ backgroundColor: "#ff0000", padding: 10, marginTop: 440, marginLeft: 20, marginRight: 20, marginBottom: 20, fontSize: 20 }}>{this.state.status}</Text>
 						<Button title="Learn More"></Button>
 					</View>
 				)}
