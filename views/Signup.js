@@ -44,8 +44,8 @@ const InputField = (props) => {
 
 	return (
 		<View>
-			<Text>{props.type}</Text>
-			<TextInput style={{ height: 40, borderColor: "gray", borderWidth: 1 }} onChangeText={(text) => onChangeText(text)} value={value} />
+			<Text style={styles.text}>{props.type}</Text>
+			<TextInput style={{ marginBottom: 10, height: 40, borderColor: "gray", borderWidth: 1 }} onChangeText={(text) => onChangeText(text)} value={value} />
 			<Button onPress={() => login(value)} title="Create Account" />
 		</View>
 	);
@@ -89,6 +89,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#fff",
 		alignItems: "center",
-		justifyContent: "center",
+		justifyContent: "space-around",
+	},
+	text: {
+		textAlign: "center",
 	},
 });
