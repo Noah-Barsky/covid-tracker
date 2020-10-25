@@ -40,17 +40,13 @@ export default class MyLocation extends React.Component {
 			ready: true,
 			where: { lat: position.coords.latitude, lng: position.coords.longitude },
 		});
+
+		console.log({ lat: position.coords.latitude, lng: position.coords.longitude });
 	};
 
 	geoFailure = (err) => {
 		this.setState({ error: err.message });
 	};
-
-	// 	type WeightedLatLng = {
-	//   latitude: Number;
-	//   longitude: Number;
-	//   weight?: Number;
-	// }
 
 	render() {
 		return (
@@ -72,7 +68,10 @@ export default class MyLocation extends React.Component {
 								{
 									latitude: this.state.where.lat,
 									longitude: this.state.where.lng,
-									weight: 20,
+								},
+								{
+									latitude: this.state.where.lat + 0.001,
+									longitude: this.state.where.lng + 0.01,
 								},
 							]}
 						/>
