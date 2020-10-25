@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import MapView, { Heatmap } from "react-native-maps";
+import MapView, { Heatmap, Callout } from "react-native-maps";
 
 export default class MyLocation extends React.Component {
 	constructor() {
@@ -10,8 +10,47 @@ export default class MyLocation extends React.Component {
 			ready: false,
 			where: { lat: null, lng: null },
 			error: null,
+			points: [],
+			pointsLoaded: false,
 		};
 	}
+
+	getPoints = () => {
+		return fetch("http://10.84.105.122:3000/getPoints", {
+			method: "GET",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				this.setState({ points: json, pointsLoaded: true });
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	createPoint = (point) => {
+		return fetch("http://10.84.105.122:3000/createPoint", {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				point: point,
+			}),
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				this.setState({ points: json });
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
 
 	getData = async () => {
 		try {
@@ -33,6 +72,7 @@ export default class MyLocation extends React.Component {
 		};
 		this.setState({ ready: false, error: null });
 		navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoFailure, geoOptions);
+		this.getPoints();
 	}
 
 	geoSuccess = (position) => {
@@ -53,7 +93,7 @@ export default class MyLocation extends React.Component {
 			<View style={styles.container}>
 				{!this.state.ready && <Text> Ready!</Text>}
 				{this.state.error && <Text>{this.state.error}</Text>}
-				{this.state.ready && (
+				{this.state.ready && this.state.pointsLoaded && (
 					<MapView
 						style={styles.map}
 						initialRegion={{
@@ -62,19 +102,9 @@ export default class MyLocation extends React.Component {
 							latitudeDelta: 0.05,
 							longitudeDelta: 0.05,
 						}}
+						onPress={(e) => this.createPoint(e.nativeEvent.coordinate)}
 					>
-						<Heatmap
-							points={[
-								{
-									latitude: this.state.where.lat,
-									longitude: this.state.where.lng,
-								},
-								{
-									latitude: this.state.where.lat + 0.001,
-									longitude: this.state.where.lng + 0.01,
-								},
-							]}
-						/>
+						<Heatmap radius={40} points={this.state.points} />
 					</MapView>
 				)}
 			</View>
