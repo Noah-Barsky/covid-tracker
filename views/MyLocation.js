@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import MapView, { Heatmap } from "react-native-maps";
 
 export default class MyLocation extends React.Component {
 	constructor() {
@@ -45,12 +46,38 @@ export default class MyLocation extends React.Component {
 		this.setState({ error: err.message });
 	};
 
+	// 	type WeightedLatLng = {
+	//   latitude: Number;
+	//   longitude: Number;
+	//   weight?: Number;
+	// }
+
 	render() {
 		return (
 			<View style={styles.container}>
 				{!this.state.ready && <Text> Ready!</Text>}
 				{this.state.error && <Text>{this.state.error}</Text>}
-				{this.state.ready && <Text>{`Lattitude: ${this.state.where.lat}\nLongitude: ${this.state.where.lng}`}</Text>}
+				{this.state.ready && (
+					<MapView
+						style={styles.map}
+						initialRegion={{
+							latitude: this.state.where.lat,
+							longitude: this.state.where.lng,
+							latitudeDelta: 0.05,
+							longitudeDelta: 0.05,
+						}}
+					>
+						<Heatmap
+							points={[
+								{
+									latitude: this.state.where.lat,
+									longitude: this.state.where.lng,
+									weight: 20,
+								},
+							]}
+						/>
+					</MapView>
+				)}
 			</View>
 		);
 	}
@@ -62,5 +89,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	map: {
+		...StyleSheet.absoluteFillObject,
 	},
 });
