@@ -17,6 +17,8 @@ target 'CovidTracker' do
   use_flipper!
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
+  pod 'react-native-ble-manager', :path => '../node_modules/react-native-ble-manager'
+
   post_install do |installer|
     flipper_post_install(installer)
   end
